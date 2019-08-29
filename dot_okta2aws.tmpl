@@ -1,0 +1,9 @@
+[default]
+url         = https://{{ .work | trimSuffix ".com" }}.okta.com/home/amazon_aws/0oa1d95a7yvxf4CBT1d8/272
+username    = {{ .chezmoi.username }}
+provider    = Okta
+mfa         = Auto
+skip_verify = false
+timeout     = 0
+aws_urn     = urn:amazon:webservices
+

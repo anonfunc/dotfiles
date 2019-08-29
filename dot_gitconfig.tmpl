@@ -1,0 +1,66 @@
+[user]
+	name = "{{ .name }}"
+	email = "{{ .email }}"
+[hub]
+	host = "{{ .workgithub }}"
+	protocol = ssh
+[core]
+	editor = code -w
+	excludesfile = ~/.gitglobalignore
+	pager = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[alias]
+	a = !git add -- "$({ git --no-pager diff --name-only; git ls-files --others --exclude-standard } | fzf -m)"
+	r = !git reset -- "$(git --no-pager diff --name-only --cached | fzf -m)"
+	commit = commit --verbose
+	st = status -s
+	ps = !git stash && git pull --rebase origin master && git stash pop
+	#gofmt = !echo $(git diff --cached --name-only --diff-filter=ACM | grep .go) | xargs gofmt -w -l | xargs git add
+	upstream=branch --set-upstream-to=origin/master
+	topic=!git fetch --all && git checkout -t origin/master -B
+[pull]
+	rebase = true
+[push]
+	default = current
+[merge]
+	conflictstyle = diff3
+[diff]
+	tool = default-difftool
+[difftool "default-difftool"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+	tool = vscode
+[mergetool "vscode"]
+	cmd = code --wait $MERGED
+[credential]
+	helper = osxkeychain
+[help]
+	autoCorrect = 1
+[fixup]
+	menu = fzf --height '60%' \
+				--bind 'tab:toggle-preview' \
+				--preview 'git show --color {+1}' \
+				--preview-window=up:80% \
+				--prompt 'Select commit: '
+[rebase]
+	autoSquash = true
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	first-run = false

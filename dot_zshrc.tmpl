@@ -1,0 +1,185 @@
+#zmodload zsh/zprof
+#source <(antibody init)
+
+# antibody bundle romkatv/powerlevel10k
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+if type gls > /dev/null
+then
+    alias ls='gls --color'
+    eval $(gdircolors -b ~/.dircolors)
+else
+    alias ls='ls -G'
+fi
+alias sleep=gsleep
+alias tmux='tmux -2 -u'
+
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=2000
+export SAVEHIST=$HISTSIZE
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt INC_APPEND_HISTORY
+
+autoload -U select-word-style
+select-word-style bash
+
+if type exa > /dev/null
+then
+# Stolen from DarrinTisdale/zsh-aliases-exa, wrapped in a check for exa.
+    # general use
+    alias ls='exa'                                                         # ls
+    alias l='exa -lbF --git'                                               # list, size, type, git
+    alias ll='exa -lbGF --git'                                             # long list
+    alias llm='exa -lbGF --git --sort=modified'                            # long list, modified date sort
+    alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
+    alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
+
+    # speciality views
+    alias lS='exa -1'			                                                  # one column, just names
+    alias lt='exa --tree --level=2'                                         # tree
+fi
+
+if type fd > /dev/null
+then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="fd . $HOME"
+    export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+
+    # Use fd (https://github.com/sharkdp/fd) instead of the default find
+    # command for listing path candidates.
+    # - The first argument to the function ($1) is the base path to start traversal
+    # - See the source code (completion.{bash,zsh}) for the details.
+    _fzf_compgen_path() {
+      fd --hidden --follow --exclude ".git" . "$1"
+    }
+
+    # Use fd to generate the list for directory completion
+    _fzf_compgen_dir() {
+      fd --type d --hidden --follow --exclude ".git" . "$1"
+    }
+fi
+export FZF_DEFAULT_OPTS='--height 40% --border'
+export FZF_COMPLETION_OPTS='+c -x'
+
+
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
+eval "$(fasd --init zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)"
+
+#alias a='fasd -R -a'        # any
+s() {
+    fasd -laR "$*" | fzf
+}
+alias d='fasd -d'        # directory
+alias f='fasd -f'        # file
+# alias sd='fasd -sid'     # interactive directory selection
+sd() {
+    fasd -ldR "$*" | fzf --preview 'ls -G {}'
+}
+# alias sf='fasd -sif'     # interactive file selection
+sf() {
+    fasd -lfR "$*" | fzf --preview 'head -100 {} | pygmentize'
+}
+# alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+z() {
+    cd "$(fasd -d "$*")"
+}
+# alias zz='fasd_cd -d -i' # cd with interactive selection
+zz() {
+    cd "$(fasd -ldR "$*" | fzf -1 --preview 'ls -G {}')"
+}
+
+
+export GITHUB_HOST={{ .workgithub }}
+alias git=hub
+
+[[ -d ~/bin ]] && export PATH=~/bin:$PATH
+[[ -d ~/.local/bin ]] && export PATH=$PATH:~/.local/bin
+[[ -d ~/Library/Python/2.7/bin ]] && export PATH=$PATH:~/Library/Python/2.7/bin
+[[ -d ~/Library/Python/3.7/bin ]] && export PATH=$PATH:~/Library/Python/3.7/bin
+
+export PIPENV_VENV_IN_PROJECT=1
+# export JAVA_TOOL_OPTIONS="-Dapple.awt.UIElement=true"
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+export GROOVY_HOME=/usr/local/opt/groovy/libexec
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+#export NVM_LAZY_LOAD=true
+# antibody bundle lukechilds/zsh-nvm
+
+export GOPATH=~/code/go
+[[ -d $GOPATH/bin ]] && export PATH=$PATH:$GOPATH/bin
+# command -v vg >/dev/null 2>&1 && eval "$(vg eval --shell zsh)"
+
+rbenv () {
+    unset -f rbenv
+    eval "$(rbenv init -)"
+    rbenv "$@"
+}
+[[ -d ~/.gem/ruby/2.3.0/bin ]] && export PATH=$PATH:~/.gem/ruby/2.3.0/bin
+
+
+v() {
+    vim "$(sf "$*")"
+}
+
+c() {
+    if [[ $# != 0 ]]
+    then
+        code "$(sf "$*")"
+    else
+        code .
+    fi
+}
+
+act() {
+    source $(fd -I -t f -H '^activate$' | head -1)
+}
+
+gco() {
+      local tags branches target
+      tags=$(
+          git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+      branches=$(
+          git branch --all | grep -v HEAD             |
+          sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
+          sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+      target=$(
+          (echo "$tags"; echo "$branches") |
+          fzf-tmux -l30 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+      git checkout $(echo "$target" | awk '{print $2}')
+}
+
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
+
+#source ~/voicecode/zsh/selection.zsh
+source ~/.talon/user/apps/selection.zsh
+stty -ixon
+
+
+# antibody bundle davidparsson/zsh-pyenv-lazy
+
+# Update cached plugin loading if we've added more bundles
+if [[ ! -f .zsh_plugins.zsh || ~/.zsh_plugins.txt -nt ~/.zsh_plugins.zsh ]]
+then
+    antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.zsh
+fi
+source ~/.zsh_plugins.zsh
+#zprof
+
+alias s2a="saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option='Duo Push'"
+alias okta2aws="echo 'running s2a instead' && s2a"
+
+# https://carlosbecker.com/posts/speeding-up-zsh/
+autoload -Uz compinit
+typeset -i updated_at=$(date +'%j' -r ~/.zcompdump 2>/dev/null || stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)
+if [[ $(date +'%j') != $updated_at ]]; then
+  compinit -i
+else
+  compinit -C -i
+fi
