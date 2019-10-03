@@ -5,6 +5,8 @@
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
+fpath=(~/.zsh-fpath $fpath)
+
 if type gls > /dev/null
 then
     alias ls='gls --color'
@@ -102,8 +104,8 @@ alias git=hub
 
 export PIPENV_VENV_IN_PROJECT=1
 # export JAVA_TOOL_OPTIONS="-Dapple.awt.UIElement=true"
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-export GROOVY_HOME=/usr/local/opt/groovy/libexec
+# export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+# export GROOVY_HOME=/usr/local/opt/groovy/libexec
 
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
@@ -172,9 +174,13 @@ fi
 source ~/.zsh_plugins.zsh
 #zprof
 
-alias s2a="saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option='Duo Push'"
+alias s2a='osascript -e "tell application \"yubiswitch\" to KeyOn" && saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
 alias okta2aws="echo 'running s2a instead' && s2a"
+alias gl=goland
 
+# ASDF https://asdf-vm.com
+source $(brew --prefix asdf)/asdf.sh
+export EDITOR=code-editor
 # https://carlosbecker.com/posts/speeding-up-zsh/
 autoload -Uz compinit
 typeset -i updated_at=$(date +'%j' -r ~/.zcompdump 2>/dev/null || stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)

@@ -3,11 +3,10 @@
 	email = "{{ .email }}"
 [hub]
 	host = "{{ .workgithub }}"
-	protocol = ssh
 [core]
 	editor = code -w
 	excludesfile = ~/.gitglobalignore
-	pager = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -64,3 +63,10 @@
 	whitespace = red reverse
 [diff-so-fancy]
 	first-run = false
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
