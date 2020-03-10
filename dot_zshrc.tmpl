@@ -137,9 +137,13 @@ export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=2000
 export SAVEHIST=$HISTSIZE
 setopt hist_ignore_space
-setopt hist_ignore_all_dups
+# setopt hist_ignore_all_dups
 setopt INC_APPEND_HISTORY
- 
+
+ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_MANUAL_REBIND=true
+
 export PIPENV_VENV_IN_PROJECT=1
 # export JAVA_TOOL_OPTIONS="-Dapple.awt.UIElement=true"
 # export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
