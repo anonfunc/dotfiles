@@ -1,6 +1,0 @@
-{
-  "https://artifactory.{{ .work }}" : {
-    "auth" : "{{ printf "%s:%s" (.chezmoi.username) ((onepassword "ojdzhnm4cfbfransdttmpswipy").details.password) | b64enc }}",
-    "email" : "{{ .email }}"
-  }
-}
