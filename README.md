@@ -2,6 +2,7 @@
 
 ## Generic Bootstrap
 
+- Install [Nix](https://nixos.org/nix/manual/#sect-single-user-installation)
 - Install [Chezmoi](https://github.com/twpayne/chezmoi/blob/master/docs/INSTALL.md)
 - Install [1password CLI](https://support.1password.com/command-line-getting-started/)
 - `chezmoi init "this repo"`
@@ -23,6 +24,10 @@
 - `chezmoi apply`
 
 ## Notes
+
+### Installing Nix managed packages
+
+`nix-env -iA nixpkgs.myPackages`
 
 ### Finding 1password UUIDs
 
