@@ -8,7 +8,8 @@ fi
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 eval "$(antibody bundle romkatv/powerlevel10k)"
 
-fpath=(~/.zsh-fpath $fpath)
+fpath=(~/.zsh-fpath /usr/local/share/zsh/site-functions $fpath)
+autoload killer
 
 if type gls > /dev/null
 then
@@ -23,6 +24,12 @@ alias tmux='tmux -2 -u'
 
 autoload -U select-word-style
 select-word-style bash
+
+if type navi > /dev/null
+then
+    export NAVI_PATH=~/.cheats
+    source "$(navi widget zsh)"
+fi
 
 if type exa > /dev/null
 then
@@ -57,6 +64,11 @@ then
     # Use fd to generate the list for directory completion
     _fzf_compgen_dir() {
       fd --type d --hidden --follow --exclude ".git" . "$1"
+    }
+else
+    fd() {
+        echo "Using 'find' as fallback" > /dev/stderr
+        find . -iname "*$1*"
     }
 fi
 export FZF_DEFAULT_OPTS='--height 40% --border'
