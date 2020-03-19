@@ -28,7 +28,7 @@ select-word-style bash
 if type navi > /dev/null
 then
     export NAVI_PATH=~/.cheats
-    source "$(navi widget zsh)"
+    source <(navi widget zsh)
 fi
 
 if type exa > /dev/null
