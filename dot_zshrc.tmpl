@@ -27,7 +27,6 @@ select-word-style bash
 
 if type navi > /dev/null
 then
-    export NAVI_PATH=~/.cheats
     source <(navi widget zsh)
 fi
 
@@ -50,7 +49,7 @@ fi
 if type fd > /dev/null
 then
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="fd . $HOME"
+    export FZF_CTRL_T_COMMAND="fd --type f --hidden --follow --exclude .git"
     export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
     # Use fd (https://github.com/sharkdp/fd) instead of the default find
@@ -129,6 +128,7 @@ fi
 
 alias s2a='osascript -e "tell application \"yubiswitch\" to KeyOn" && saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
 alias okta2aws="echo 'running s2a instead' && s2a"
+alias ap='export AWS_PROFILE="$(grep \\\[ ~/.aws/credentials | tr -d "[]" | fzf)"'
 alias gl=goland
 
 # ASDF https://asdf-vm.com
@@ -172,9 +172,10 @@ then
     antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.zsh
 fi
 source ~/.zsh_plugins.zsh
-
+  
 # After plugins.
-source ~/.talon/user/apps/selection.zsh
+# source ~/.talon/user/apps/selection.zsh
+source ~/.talon/user/contexts/app/terminal/selection.zsh
 
 # https://carlosbecker.com/posts/speeding-up-zsh/
 autoload -Uz compinit

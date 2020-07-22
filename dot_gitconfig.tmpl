@@ -1,8 +1,10 @@
 [user]
 	name = "{{ .name }}"
 	email = "{{ .email }}"
+	signingkey = 4B25811578BFF184
 [hub]
 	host = "{{ .workgithub }}"
+	protocol = https
 [core]
 	editor = code -w
 	excludesfile = ~/.gitglobalignore
@@ -29,6 +31,7 @@
 	conflictstyle = diff3
 [diff]
 	tool = default-difftool
+	renameLimit = 2000
 [difftool "default-difftool"]
 	cmd = code --wait --diff $LOCAL $REMOTE
 [merge]
@@ -46,7 +49,7 @@
 				--preview-window=up:80% \
 				--prompt 'Select commit: '
 [rebase]
-	autoSquash = true
+	autosquash = true
 [color]
 	ui = true
 [color "diff-highlight"]
@@ -63,10 +66,19 @@
 	whitespace = red reverse
 [diff-so-fancy]
 	first-run = false
-
+[fixup]
+    menu = fzf --height '60%' \
+                --bind 'tab:toggle-preview' \
+                --preview 'git show --color {+1}' \
+                --preview-window=up:80% \
+                --prompt 'Select commit: '
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[commit]
+# 	gpgsign = true
+[gpg]
+	program = /usr/local/bin/gpg
