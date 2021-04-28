@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "$(head -1 < $1/go.mod | sed -e 's/module/replace/') => $1"

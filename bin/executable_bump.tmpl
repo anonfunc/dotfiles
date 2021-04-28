@@ -1,0 +1,32 @@
+#!/bin/bash
+#set -x 
+set -e
+
+
+MODULES=($(cat go.mod | grep {{ $workgovanity }} |grep -v 'module\|replace' | tr -d '\t'|cut -d' ' -f1 | fzf -m -q "$1" -1))
+
+OLD_VERSIONS=$(go mod edit -json | jq 'reduce .Require[] as $i ({}; . * {($i.Path): $i.Version})')
+for m in "${MODULES[@]}"
+do
+echo go mod edit -require=$m@latest
+go mod edit -require=$m@latest
+echo go mod tidy
+go mod tidy
+done
+
+
+NEW_VERSIONS=$(go mod edit -json | jq 'reduce .Require[] as $i ({}; . * {($i.Path): $i.Version})')
+
+if [[ -d vendor ]]
+then  
+   echo go mod vendor
+   go mod vendor
+fi
+
+if [[ -d .git ]]
+then
+   git add go.mod go.sum vendor/
+fi
+
+# echo "Bumped $MODULE, version changes: "
+# diff --side-by-side --suppress-common-lines <(echo $OLD_VERSIONS) <(echo $NEW_VERSIONS) | tr -d '" |,' |tr '\t:' ' ' | cut -d ' ' -f 1,2,6 | sed -e 's/ \([^ ]*\)$/ => \1/g'

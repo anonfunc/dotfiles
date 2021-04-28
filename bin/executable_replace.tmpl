@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -x
+set -e
+CODEDIR=$HOME/code
+
+MODULE=$(cat go.mod | grep {{ $workgovanity }} |grep -v 'module\|replace' | tr -d '\t'|cut -d' ' -f1 | fzf -q "$1" -1 --preview 'cd $(echo -n {} | sed -e "s@{{ $workgovanity }}@'$CODEDIR'@") && git -c color.status=always status -s && echo && git log --color=always --oneline origin/master^..HEAD ')
+
+OTHER=$(echo -n $MODULE | sed -e "s@{{ $workgovanity }}@$CODEDIR@" )
+
+go mod edit -replace=$MODULE=$OTHER
+if [[ -d vendor ]]
+then
+    go mod vendor
+fi

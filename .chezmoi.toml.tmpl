@@ -1,9 +1,37 @@
-{{- $name := promptString "name" -}}
+{{- $name := get . "name" -}}
+{{- if not $name }}
+{{- $name := promptString "first and last name" -}}
+{{- end -}}
+
+{{- $email := get . "email" -}}
+{{- if not $email }}
 {{- $email := promptString "email" -}}
-{{- $work := promptString "work" -}}
-{{- $workgithub := promptString "workgithub" -}}
+{{- end -}}
+
+{{- $work := get . "work" -}}
+{{- if not $work }}
+{{- $work := promptString "work as domain" -}}
+{{- end -}}
+
+{{- $workgithub := get . "workgithub" -}}
+{{- if not $workgithub }}
+{{- $workgithub := promptString "workgithub domain" -}}
+{{- end -}}
+
+{{- $workgovanity := get . "workgovanity" -}}
+{{- if not $workgovanity }}
+{{- $workgovanity := promptString "work go vanity domain" -}}
+{{- end -}}
 [data]
     name = "{{ $name }}"
     email = "{{ $email }}"
     work = "{{ $work }}"
     workgithub = "{{ $workgithub }}"
+    workgovanity = "{{ $workgovanity }}"
+
+[diff]
+  format = "git"
+  pager = "diff-so-fancy"
+
+[merge]
+  command = "goland-merge"

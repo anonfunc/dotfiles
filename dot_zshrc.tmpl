@@ -1,4 +1,4 @@
-#zmodload zsh/zprof
+# zmodload zsh/zprof
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -124,7 +124,7 @@ if type nvim > /dev/null 2>&1; then
   alias vim='nvim'
 fi
 
-#zprof
+# zprof
 
 alias s2a='osascript -e "tell application \"yubiswitch\" to KeyOn" && saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
 alias okta2aws="echo 'running s2a instead' && s2a"
@@ -133,7 +133,6 @@ alias gl=goland
 
 # ASDF https://asdf-vm.com
 source $(brew --prefix asdf)/asdf.sh
-export EDITOR=code-editor
 
 [[ -d ~/bin ]] && export PATH=~/bin:$PATH
 [[ -d ~/.local/bin ]] && export PATH=$PATH:~/.local/bin
@@ -141,6 +140,13 @@ export EDITOR=code-editor
 [[ -d ~/Library/Python/3.7/bin ]] && export PATH=$PATH:~/Library/Python/3.7/bin
 [[ -d ~/.cargo/bin ]] && export PATH=~/.cargo/bin:$PATH
 [[ -d ~/.cabal/bin ]] && export PATH=~/.cabal/bin:$PATH
+
+if type goland-editor > /dev/null 2>&1; then
+  export EDITOR=goland-editor
+elif type code-editor > /dev/null 2>&1; then
+  export EDITOR=code-editor
+fi
+alias e=$EDITOR
 
 stty -ixon 2>/dev/null
 
@@ -152,7 +158,8 @@ setopt hist_ignore_space
 # setopt hist_ignore_all_dups
 setopt INC_APPEND_HISTORY
 
-ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)
+#ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)
+ZSH_AUTOSUGGEST_STRATEGY=(completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_MANUAL_REBIND=true
 

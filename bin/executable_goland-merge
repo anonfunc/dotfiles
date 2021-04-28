@@ -1,0 +1,14 @@
+#!/bin/bash
+#set -x
+
+# For whatever reason, the toolbox installed CLIs don't work with the merge command, so find the executable
+GOLAND="$(fd --max-results 1 --glob goland "$HOME/Library/Application Support/JetBrains/Toolbox/apps/Goland/")"
+
+if [[ $# -eq 3 ]]
+then
+  # Using for chezmoi, it's passing existing, source and a temp rendering.  We want to merge changes into the source, so swap 2nd and 3rd args.
+  exec "${GOLAND}" merge $1 $3 $2
+else
+  # Four or two args should be correctly ordered.
+  exec "${GOLAND}" merge $*
+fi

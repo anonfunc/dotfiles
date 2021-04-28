@@ -6,7 +6,7 @@
 	host = "{{ .workgithub }}"
 	protocol = https
 [core]
-	editor = code -w
+	editor = goland -w -e
 	excludesfile = ~/.gitglobalignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [filter "lfs"]
@@ -27,17 +27,6 @@
 	rebase = true
 [push]
 	default = current
-[merge]
-	conflictstyle = diff3
-[diff]
-	tool = default-difftool
-	renameLimit = 2000
-[difftool "default-difftool"]
-	cmd = code --wait --diff $LOCAL $REMOTE
-[merge]
-	tool = vscode
-[mergetool "vscode"]
-	cmd = code --wait $MERGED
 [credential]
 	helper = osxkeychain
 [help]
@@ -72,13 +61,31 @@
                 --preview 'git show --color {+1}' \
                 --preview-window=up:80% \
                 --prompt 'Select commit: '
+[merge]
+    conflictstyle = diff3
+[diff]
+    tool = goland
+    renameLimit = 2000
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+    tool = vscode
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[difftool "goland"]
+	cmd = goland diff \"$LOCAL\" \"$REMOTE\"
+[mergetool "goland"]
+	cmd = goland-merge \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = true
 [commit]
 # 	gpgsign = true
 [gpg]
 	program = /usr/local/bin/gpg
+[rerere]
+	enabled = true
