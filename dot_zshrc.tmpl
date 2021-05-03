@@ -6,7 +6,7 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-eval "$(antibody bundle romkatv/powerlevel10k)"
+# eval "$(antibody bundle romkatv/powerlevel10k)"
 
 fpath=(~/.zsh-fpath /usr/local/share/zsh/site-functions $fpath)
 autoload killer
@@ -22,8 +22,8 @@ fi
 alias sleep=gsleep
 alias tmux='tmux -2 -u'
 
-autoload -U select-word-style
-select-word-style bash
+# autoload -U select-word-style
+# select-word-style bash
 
 if type navi > /dev/null
 then
@@ -75,6 +75,7 @@ export FZF_COMPLETION_OPTS='+c -x'
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
+# Cache this?
 eval "$(fasd --init zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)"
 
 s() {
@@ -132,7 +133,8 @@ alias ap='export AWS_PROFILE="$(grep \\\[ ~/.aws/credentials | tr -d "[]" | fzf)
 alias gl=goland
 
 # ASDF https://asdf-vm.com
-source $(brew --prefix asdf)/asdf.sh
+# source $(brew --prefix asdf)/asdf.sh
+[[ -f /usr/local/opt/asdf/asdf.sh ]] && source /usr/local/opt/asdf/asdf.sh
 
 [[ -d ~/bin ]] && export PATH=~/bin:$PATH
 [[ -d ~/.local/bin ]] && export PATH=$PATH:~/.local/bin
@@ -164,14 +166,15 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_MANUAL_REBIND=true
 
 export PIPENV_VENV_IN_PROJECT=1
+
 # export JAVA_TOOL_OPTIONS="-Dapple.awt.UIElement=true"
 # export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 # export GROOVY_HOME=/usr/local/opt/groovy/libexec
+
 export GOPATH=~/code/go
 [[ -d $GOPATH/bin ]] && export PATH=$PATH:$GOPATH/bin
 
-if [[ -e /Users/dwight.holman/.nix-profile/etc/profile.d/nix.sh ]]; then source /Users/dwight.holman/.nix-profile/etc/profile.d/nix.sh; fi
-
+# if [[ -e /Users/dwight.holman/.nix-profile/etc/profile.d/nix.sh ]]; then source /Users/dwight.holman/.nix-profile/etc/profile.d/nix.sh; fi
 
 # Update cached plugin loading if we've added more bundles
 if [[ ! -f .zsh_plugins.zsh || ~/.zsh_plugins.txt -nt ~/.zsh_plugins.zsh ]]
@@ -192,3 +195,4 @@ if [[ $(date +'%j') != $updated_at ]]; then
 else
   compinit -C -i
 fi
+# zprof
