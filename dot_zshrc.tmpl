@@ -185,7 +185,7 @@ source ~/.zsh_plugins.zsh
   
 # After plugins.
 # source ~/.talon/user/apps/selection.zsh
-source ~/.talon/user/contexts/app/terminal/selection.zsh
+[[ -d ~/.talon ]] && source ~/.talon/user/contexts/app/terminal/selection.zsh
 
 # https://carlosbecker.com/posts/speeding-up-zsh/
 autoload -Uz compinit
