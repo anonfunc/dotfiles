@@ -1,33 +1,13 @@
-{{- $name := get . "name" -}}
-{{- if not $name }}
-{{- $name := promptString "first and last name" -}}
-{{- end -}}
-
-{{- $email := get . "email" -}}
-{{- if not $email }}
 {{- $email := promptString "email" -}}
-{{- end -}}
-
-{{- $work := get . "work" -}}
-{{- if not $work }}
-{{- $work := promptString "work as domain" -}}
-{{- end -}}
-
-{{- $workgithub := get . "workgithub" -}}
-{{- if not $workgithub }}
 {{- $workgithub := promptString "workgithub domain" -}}
-{{- end -}}
-
-{{- $workgovanity := get . "workgovanity" -}}
-{{- if not $workgovanity }}
 {{- $workgovanity := promptString "work go vanity domain" -}}
-{{- end -}}
+
 [data]
-    name = "{{ $name }}"
-    email = "{{ $email }}"
-    work = "{{ $work }}"
-    workgithub = "{{ $workgithub }}"
-    workgovanity = "{{ $workgovanity }}"
+    name = {{ $email | splitList "@" | first | splitList "." | join " " | title | quote }}
+    email = {{ $email | quote }}
+    work = {{ $email | splitList "@" | last | quote }}
+    workgithub = {{ $workgithub | quote }}
+    workgovanity = {{ $workgovanity | quote }}
 
 [diff]
   format = "git"

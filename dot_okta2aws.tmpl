@@ -1,6 +1,6 @@
 [default]
 url         = https://{{ .work | trimSuffix ".com" }}.okta.com/home/amazon_aws/0oa1d95a7yvxf4CBT1d8/272
-username    = {{ .chezmoi.username }}
+username    = {{ .email | splitList "@" | mustFirst }}
 provider    = Okta
 mfa         = Auto
 skip_verify = false

@@ -1,5 +1,5 @@
-_auth = {{ printf "%s:%s" (.chezmoi.username) ((onepassword "ojdzhnm4cfbfransdttmpswipy").details.password) | b64enc }}
+_auth = {{ printf "%s:%s" (.email | splitList "@" | mustFirst) ((onepassword "ojdzhnm4cfbfransdttmpswipy").details.password) | b64enc }}
 repository = "https://artifactory.{{ .work }}/artifactory/api/npm/npm-virtual"
 always-auth = true
 email = {{ .email }}
-registry=https://{{ .chezmoi.username }}:{{ (onepassword "ojdzhnm4cfbfransdttmpswipy").details.password }}@artifactory.{{ .work }}/artifactory/api/npm/npm-virtual
+registry=https://{{ .email | splitList "@" | mustFirst }}:{{ (onepassword "ojdzhnm4cfbfransdttmpswipy").details.password }}@artifactory.{{ .work }}/artifactory/api/npm/npm-virtual
