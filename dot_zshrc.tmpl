@@ -127,7 +127,12 @@ fi
 
 # zprof
 
-alias s2a='osascript -e "tell application \"yubiswitch\" to KeyOn" && saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
+if type osascript > /dev/null 2>&1; then
+  alias s2a='osascript -e "tell application \"yubiswitch\" to KeyOn" && saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
+else
+  alias s2a='saml2aws login --skip-prompt --mfa=DUO --duo-mfa-option=Passcode'
+fi
+
 alias okta2aws="echo 'running s2a instead' && s2a"
 alias ap='export AWS_PROFILE="$(grep \\\[ ~/.aws/credentials | tr -d "[]" | fzf)"'
 alias gl=goland
